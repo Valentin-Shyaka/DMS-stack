@@ -25,7 +25,7 @@ const Joi = require('joi');
  *       - modelName
  */
 
-const Book = sequelize.define("laptops", {
+const Book = sequelize.define("books", {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,

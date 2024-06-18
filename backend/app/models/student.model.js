@@ -29,7 +29,7 @@ const jwt = require('jsonwebtoken');
  *       - position
  */
 
-const Student = sequelize.define('AdminTable', {
+const Student = sequelize.define('students', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
