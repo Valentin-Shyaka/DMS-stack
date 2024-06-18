@@ -1,6 +1,6 @@
 // import dependencies
 const { verify } = require('jsonwebtoken');
-const Admin = require('../models/admin.model');
+const Admin = require('../models/student.model');
 
 async function auth(req, res, next) {
     const header = req.header('Authorization')

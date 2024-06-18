@@ -1,9 +1,10 @@
 const {
-  getAllEmployees,
-  createEmployee,
-  updateEmployee,
-  deleteEmployee
-} = require("../controllers/employee.controller");
+  createStudent,
+  updateStudent,
+  deleteStudent,
+  studentLogin,
+  getCurrentStudent
+} = require("../controllers/student.controller");
 const {
   auth
 } = require("../middlewares/auth.middleware");
@@ -12,55 +13,21 @@ module.exports = (app) => {
 
   var router = require("express").Router();
 
-  // Create a new User
   router.route("/")
     /**
      * @swagger
-     * /employees:
-     *   get:
-     *     tags:
-     *       - Employee
-     *     description: Returns all Employees
-     *     security:
-     *       - bearerAuth: -[]
-     *     parameters:
-     *       - name: page
-     *         description: page number
-     *         in: query
-     *         type: string
-     *       - name: limit
-     *         description: elements per page
-     *         in: query
-     *         type: string
-     *     responses:
-     *       200:
-     *         description: OK
-     *       400:
-     *         description: Bad Request
-     *       404:
-     *         description: Not Found
-     *       401:
-     *         description: Unauthorized
-     *       500:
-     *         description: Internal Server Error
-     */
-    .get([auth, getAllEmployees])
-    /**
-     * @swagger
-     * /employees:
+     * /students:
      *   post:
      *     tags:
-     *       - Employee
-     *     description: Create a employee
-     *     security:
-     *       - bearerAuth: -[]
+     *       - Student
+     *     description: Create a user
      *     parameters:
      *       - name: body
-     *         description: Fields for a employee
+     *         description: Fields for a user
      *         in: body
      *         required: true
      *         schema:
-     *           $ref: '#/definitions/Employee'
+     *           $ref: '#/definitions/User'
      *     responses:
      *       200:
      *         description: OK
@@ -73,31 +40,23 @@ module.exports = (app) => {
      *       500:
      *         description: Internal Server Error
      */
-    .post([auth, createEmployee]);
-
-  // Create a new User
-  router.route("/:id")
+    .post(createStudent)
     /**
      * @swagger
-     * /employees/{id}:
+     * /students:
      *   put:
      *     tags:
-     *       - Employee
-     *     description: Create a employee
+     *       - Student
+     *     description: Update a user
      *     security:
      *       - bearerAuth: -[]
      *     parameters:
-     *       - name: id
-     *         description: employee id
-     *         in: path
-     *         type: string
-     *         required: true
      *       - name: body
-     *         description: Fields for a employee
+     *         description: Fields for a user
      *         in: body
      *         required: true
      *         schema:
-     *           $ref: '#/definitions/Employee'
+     *           $ref: '#/definitions/User'
      *     responses:
      *       200:
      *         description: OK
@@ -110,22 +69,16 @@ module.exports = (app) => {
      *       500:
      *         description: Internal Server Error
      */
-    .put([auth, updateEmployee])
+    .put([auth, updateStudent])
     /**
      * @swagger
-     * /employees/{id}:
+     * /students:
      *   delete:
      *     tags:
-     *       - Employee
-     *     description: Delete Employee
+     *       - Student
+     *     description: Delete User
      *     security:
      *       - bearerAuth: -[]
-     *     parameters:
-     *       - name: id
-     *         description: employee id
-     *         in: path
-     *         type: string
-     *         required: true
      *     responses:
      *       200:
      *         description: OK
@@ -138,7 +91,64 @@ module.exports = (app) => {
      *       500:
      *         description: Internal Server Error
      */
-    .delete([auth, deleteEmployee]);
+    .delete([auth, deleteStudent]);
 
-  app.use("/api/employees", router);
+  router.route("/current")
+    /**
+     * @swagger
+     * /students/current:
+     *   get:
+     *     tags:
+     *       - Student
+     *     description: Returns current User
+     *     security:
+     *       - bearerAuth: -[]
+     *     responses:
+     *       200:
+     *         description: OK
+     *       400:
+     *         description: Bad Request
+     *       404:
+     *         description: Not Found
+     *       401:
+     *         description: Unauthorized
+     *       500:
+     *         description: Internal Server Error
+     */
+    .get([auth, getCurrentStudent])
+
+  router.route("/login")
+    /**
+     * @swagger
+     * /students/login:
+     *   post:
+     *     tags:
+     *       - Student
+     *     description: User Login
+     *     parameters:
+     *       - name: body
+     *         description: Fields for a user
+     *         in: body
+     *         required: true
+     *         schema:
+     *           properties:
+     *            email:
+     *              type: string
+     *            password:
+     *              type: string
+     *     responses: 
+     *       200:
+     *         description: OK
+     *       400:
+     *         description: Bad Request
+     *       404:
+     *         description: Not Found
+     *       401:
+     *         description: Unauthorized
+     *       500:
+     *         description: Internal Server Error
+     */
+    .post(studentLogin)
+
+  app.use("/api/students", router);
 };

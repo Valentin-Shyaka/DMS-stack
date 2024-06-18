@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
-const { validateAdmin, validateAdminLogin } = require('../models/admin.model');
-const Admin = require('../models/admin.model');
+const { validateStudent, validateStudentLogin } = require('../models/student.model');
+const Student = require('../models/student.model');
 const { hashPassword } = require('../utils/imports');
 
 
@@ -9,9 +9,9 @@ const { hashPassword } = require('../utils/imports');
  * @param req
  * @param res
  */
-exports.createAdmin = async (req, res) => {
+exports.createStudent = async (req, res) => {
   try {
-    const { error } = validateAdmin(req.body);
+    const { error } = validateStudent(req.body);
     if (error) return res.status(400).send({ message: error.details[0].message });
 
     // let count = await Admin.count();
@@ -19,7 +19,7 @@ exports.createAdmin = async (req, res) => {
 
     req.body.password = await hashPassword(req.body.password);
 
-    const newUser = await Admin.create(req.body);
+    const newUser = await Student.create(req.body);
 
     return res.status(201).send({ message: 'CREATED', data: newUser });
   } catch (e) {
@@ -28,11 +28,11 @@ exports.createAdmin = async (req, res) => {
 };
 
 /***
- * Get the current user
+ * Get the current student
  * @param req
  * @param res
  */
-exports.getCurrentAdmin = async (req, res) => {
+exports.getCurrentStudent = async (req, res) => {
   try {
     return res.status(200).send({ message: 'OK', data:req.user});
   } catch (e) {
@@ -41,22 +41,22 @@ exports.getCurrentAdmin = async (req, res) => {
 };
 
 /**
- * Login User
+ * Login student
  * @param req
  * @param res
  */
-exports.adminLogin = async (req, res) => {
+exports.studentLogin = async (req, res) => {
   try {
-    const { error } = validateAdminLogin(req.body);
+    const { error } = validateStudentLogin(req.body);
     if (error) return res.status(400).send({ message: error.details[0].message });
 
-    const user = await Admin.findOne({ where: { email: req.body.email } });
-    if (!user) return res.status(404).send({ message: 'Invalid credentials' });
+    const student = await Student.findOne({ where: { email: req.body.email } });
+    if (!student) return res.status(404).send({ message: 'Invalid credentials' });
 
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    const validPassword = await bcrypt.compare(req.body.password, student.password);
     if (!validPassword) return res.status(404).send({ message: 'Invalid credentials' });
 
-    const token = user.generateAuthToken();
+    const token = student.generateAuthToken();
 
     return res.status(200).send({ message: 'OK', token });
   } catch (e) {
@@ -65,33 +65,33 @@ exports.adminLogin = async (req, res) => {
 };
 
 /***
- * Update a user
+ * Update a student
  * @param req
  * @param res
  */
-exports.updateAdmin = async (req, res) => {
+exports.updateStudent = async (req, res) => {
   try {
-    const { error } = validateAdmin(req.body, true);
+    const { error } = validateStudent(req.body, true);
     if (error) return res.status(400).send({ message: error.details[0].message });
 
-    const { email, nationalId, phone } = req.body;
+    const { email, phone } = req.body;
 
-    const duplicateAdmin = await Admin.findOne({
+    const duplicateStudent = await Student.findOne({
       where: {
         id: { [Op.not]: req.user.id },
-        [Op.or]: [{ email }, { nationalId }, { phone }],
+        [Op.or]: [{ email }, { phone }],
       },
     });
 
-    if (duplicateUser) {
-      const phoneFound = phone === duplicateAdmin.phone;
-      const emailFound = email === duplicateAdmin.email;
+    if (duplicateStudent) {
+      const phoneFound = phone === duplicateStudent.phone;
+      const emailFound = email === duplicateStudent.email;
       return res.status(400).send({
-        message: `Admin with the same ${phoneFound ? 'phone' : emailFound ? 'email' : 'nationalId'} already exists`,
+        message: `Student with the same ${phoneFound ? 'phone' : emailFound ? 'email' :'nationalId'} already exists`,
       });
     }
 
-    const result = await Admin.update(req.body, { where: { id: req.user.id }, returning: true });
+    const result = await Student.update(req.body, { where: { id: req.user.id }, returning: true });
 
     return res.status(200).send({ message: 'UPDATED', data: result[1][0] });
   } catch (e) {
@@ -100,13 +100,13 @@ exports.updateAdmin = async (req, res) => {
 };
 
 /***
- * Delete a user
+ * Delete a student
  * @param req
  * @param res
  */
-exports.deleteAdmin = async (req, res) => {
+exports.deleteStudent = async (req, res) => {
   try {
-    const result = await Admin.destroy({ where: { id: req.user.id } });
+    const result = await Student.destroy({ where: { id: req.user.id } });
     if (!result) return res.status(404).send({ message: 'User not found' });
 
     return res.send({ message: 'DELETED', data: result });

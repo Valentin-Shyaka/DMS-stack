@@ -5,15 +5,19 @@ const Joi = require('joi');
 /**
  * @swagger
  * definitions:
- *   Laptop:
+ *   Books:
  *     properties:
  *       id:
  *         type: string
- *       laptopSerialNumber:
+ *       name:
  *         type: string
- *       manufactureCompany:
+ *       author:
  *         type: string
- *       modelName:
+ *       publisher:
+ *         type: string
+ *       publicationYear:
+ *         type: string
+ *       subject:
  *         type: string
  *     required:
  *       - laptopSerialNumber
@@ -21,22 +25,30 @@ const Joi = require('joi');
  *       - modelName
  */
 
-const Laptop = sequelize.define("laptops", {
+const Book = sequelize.define("laptops", {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
   },
-  modelName: {
+  name: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
-  manufactureCompany: {
+  author: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
-  laptopSerialNumber: {
+  publisher: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  publicationYear: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  subject: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
@@ -54,19 +66,21 @@ const Laptop = sequelize.define("laptops", {
 // Sync laptop model with the database
 (async () => {
   try {
-    await Laptop.sync();
-    console.log("Laptop table created successfully");
+    await Book.sync();
+    console.log("Book table created successfully");
   } catch (err) {
-    console.error("Error syncing Laptop table:", err);
+    console.error("Error syncing Book table:", err);
   }
 })();
 
-module.exports = Laptop;
+module.exports = Book;
 
-module.exports.validateLaptop = (body) => {
+module.exports.validateBook = (body) => {
   return Joi.object({
-    laptopSerialNumber: Joi.string().required(),
-    manufactureCompany: Joi.string().required(),
-    modelName: Joi.string().required(),
+    name: Joi.string().required(),
+    author: Joi.string().required(),
+    publisher: Joi.string().required(),
+    publicationYear: Joi.string().required(),
+    subject: Joi.string().required(),
   }).validate(body);
 };

@@ -7,25 +7,17 @@ const jwt = require('jsonwebtoken');
 /**
  * @swagger
  * definitions:
- *   Admin:
+ *   Student:
  *     properties:
  *       id:
  *         type: string
- *       First name:
- *         type: string
- *       Last name:
+ *       fullNamea:
  *         type: string
  *       email:
  *         type: string
  *       password:
  *         type: string
- *       phone:
- *         type: string
- *       nationalId:
- *         type: string
- *       department:
- *         type: string
- *       position:
+ *       class:
  *         type: string
  *     required:
  *       - names
@@ -37,7 +29,7 @@ const jwt = require('jsonwebtoken');
  *       - position
  */
 
-const Admin = sequelize.define('AdminTable', {
+const Student = sequelize.define('AdminTable', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -48,19 +40,8 @@ const Admin = sequelize.define('AdminTable', {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
-  nationalId: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  department: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  position: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  phone: {
+ 
+  class: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
@@ -87,33 +68,31 @@ const Admin = sequelize.define('AdminTable', {
 // Sync employee model with the database
 (async () => {
   try {
-    await Admin.sync();
-    console.log("Admin table created successfully");
+    await Student.sync();
+    console.log("Student table created successfully");
   } catch (err) {
-    console.error("Error syncing User table:", err);
+    console.error("Error syncing Student table:", err);
   }
 })();
 
-Admin.prototype.generateAuthToken = function () {
+Student.prototype.generateAuthToken = function () {
   const token = jwt.sign({ id: this.id }, process.env.JWT_SECRET);
   return token;
 };
 
-module.exports = Admin;
+module.exports = Student ;
 
-module.exports.validateAdmin = (body, isUpdating = false) => {
+module.exports.validateStudent = (body, isUpdating = false) => {
   return Joi.object({
     fullNames: Joi.string().required(),
     email: Joi.string().email().required(),
-    phone: Joi.string().pattern(/(?<!\d)\d{10}(?!\d)/).required(),
     password: isUpdating ? Joi.string().min(6) : Joi.string().min(6).required(),
-    nationalId: Joi.string().pattern(/(?<!\d)\d{16}(?!\d)/).length(16).required(),
-    department: Joi.string().required(),
-    position: Joi.string().required()
+    class: Joi.string().required(),
+   
   }).validate(body);
 };
 
-module.exports.validateAdminLogin = (body) => {
+module.exports.validateStudentLogin = (body) => {
   return Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),

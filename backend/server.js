@@ -12,9 +12,9 @@ const host = process.env.HOST || "localhost";
 const swaggerOptions = {
   swaggerDefinition: {
       info: {
-          title: "test System API Documentation",
+          title: "Library management System API Documentation",
           version: "1.0.0",
-          description: "test System by Mr. shyaka",
+          description: "book management API's System by Mr. shyaka",
       },
       schemes: [process.env.NODE_ENV === "production" ? "https" : "http"],
       host: host+":"+PORT,

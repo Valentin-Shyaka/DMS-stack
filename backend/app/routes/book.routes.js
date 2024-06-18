@@ -1,9 +1,9 @@
 const {
-  getAllLaptops,
-  createLaptop,
-  updateLaptop,
-  deleteLaptop
-} = require("../controllers/laptop.controller");
+  getAllBooks,
+  createBook,
+  updateBook,
+  deleteBook
+} = require("../controllers/book.controller");
 const {
   auth
 } = require("../middlewares/auth.middleware");
@@ -15,11 +15,11 @@ module.exports = (app) => {
   router.route("/")
     /**
      * @swagger
-     * /laptops:
+     * /books:
      *   get:
      *     tags:
-     *       - Laptop
-     *     description: Returns all Laptops
+     *       - Book
+     *     description: Returns all books
      *     security:
      *       - bearerAuth: -[]
      *     parameters:
@@ -43,23 +43,23 @@ module.exports = (app) => {
      *       500:
      *         description: Internal Server Error
      */
-    .get([auth, getAllLaptops])
+    .get([auth, getAllBooks])
     /**
      * @swagger
-     * /laptops:
+     * /books:
      *   post:
      *     tags:
-     *       - Laptop
-     *     description: Create a laptop
+     *       - Book
+     *     description: Create a book
      *     security:
      *       - bearerAuth: -[]
      *     parameters:
      *       - name: body
-     *         description: Fields for a laptop
+     *         description: Fields for a book
      *         in: body
      *         required: true
      *         schema:
-     *           $ref: '#/definitions/Laptop'
+     *           $ref: '#/definitions/book'
      *     responses:
      *       200:
      *         description: OK
@@ -72,30 +72,30 @@ module.exports = (app) => {
      *       500:
      *         description: Internal Server Error
      */
-    .post([auth, createLaptop]);
+    .post([auth, createBook]);
 
   router.route("/:id")
     /**
      * @swagger
-     * /laptops/{id}:
+     * /books/{id}:
      *   put:
      *     tags:
-     *       - Laptop
-     *     description: Create a laptop
+     *       - Book
+     *     description: Create a book
      *     security:
      *       - bearerAuth: -[]
      *     parameters:
      *       - name: id
-     *         description: laptop id
+     *         description: book id
      *         in: path
      *         type: string
      *         required: true
      *       - name: body
-     *         description: Fields for a laptop
+     *         description: Fields for a book
      *         in: body
      *         required: true
      *         schema:
-     *           $ref: '#/definitions/Laptop'
+     *           $ref: '#/definitions/book'
      *     responses:
      *       200:
      *         description: OK
@@ -108,19 +108,19 @@ module.exports = (app) => {
      *       500:
      *         description: Internal Server Error
      */
-    .put([auth, updateLaptop])
+    .put([auth, updateBook])
     /**
      * @swagger
-     * /laptops/{id}:
+     * /books/{id}:
      *   delete:
      *     tags:
-     *       - Laptop
-     *     description: Delete Laptop
+     *       - Book
+     *     description: Delete book
      *     security:
      *       - bearerAuth: -[]
      *     parameters:
      *       - name: id
-     *         description: laptop id
+     *         description: book id
      *         in: path
      *         type: string
      *         required: true
@@ -136,7 +136,7 @@ module.exports = (app) => {
      *       500:
      *         description: Internal Server Error
      */
-    .delete([auth, deleteLaptop]);
+    .delete([auth, deleteBook]);
 
-  app.use("/api/laptops", router);
+  app.use("/api/books", router);
 };

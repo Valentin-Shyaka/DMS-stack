@@ -13,6 +13,8 @@ const sequelize = new Sequelize({
     database: process.env.DB_NAME,
 });
 
+console.log(process.env.DB_PASSWORD)
+
 sequelize
     .authenticate()
     .then(() => {
